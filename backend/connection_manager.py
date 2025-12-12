@@ -67,15 +67,22 @@ class ConnectionManager:
 
     async def broadcast_to_room(self, room_id: str, message: dict):
         if room_id not in self.rooms:
+            logger.warning(f"Room {room_id} not found for broadcast")
             return
         
         room = self.rooms[room_id]
         
         if room.player1 and room.player1.id in self.active_connections:
             await self.active_connections[room.player1.id].send_json(message)
+            logger.info(f"Sent message to player1 {room.player1.id}: {message}")
+        else:
+            logger.warning(f"Player1 {room.player1.id if room.player1 else 'None'} not in active connections")
         
         if room.player2 and room.player2.id in self.active_connections:
             await self.active_connections[room.player2.id].send_json(message)
+            logger.info(f"Sent message to player2 {room.player2.id}: {message}")
+        else:
+            logger.warning(f"Player2 {room.player2.id if room.player2 else 'None'} not in active connections")
 
     async def create_room(self, client_id: str) -> str:
         room_id = str(uuid.uuid4())[:6].upper()
