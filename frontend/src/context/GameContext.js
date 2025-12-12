@@ -143,7 +143,8 @@ export const GameProvider = ({ children }) => {
       rematch,
       messages,
       playerSecret,
-      players
+      players,
+      isHost
     }}>
       {children}
     </GameContext.Provider>
