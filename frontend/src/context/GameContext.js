@@ -17,7 +17,8 @@ export const GameProvider = ({ children }) => {
   const [players, setPlayers] = useState({});
 
   useEffect(() => {
-    localStorage.setItem('clientId', clientId);
+    // Don't store clientId in localStorage to avoid conflicts between tabs
+    // localStorage.setItem('clientId', clientId);
     
     // Construct WebSocket URL
     const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
