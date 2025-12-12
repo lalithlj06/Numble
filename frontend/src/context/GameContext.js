@@ -70,10 +70,12 @@ export const GameProvider = ({ children }) => {
             setRoomId(data.room_id);
         }
         setGameState(data.game_state);
+        if (data.players) setPlayers(data.players);
         toast.success("Player joined!");
         break;
       case 'player_ready':
         setGameState(data.game_state);
+        if (data.players) setPlayers(data.players);
         toast.info(`Player ${data.name || ''} is ready!`);
         break;
       case 'game_started':
