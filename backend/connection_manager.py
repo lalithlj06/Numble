@@ -114,11 +114,14 @@ class ConnectionManager:
         # Small delay to ensure WebSocket connection is fully established
         await asyncio.sleep(0.1)
         
-        # Notify both players
         await self.broadcast_to_room(room_id, {
             "type": "player_joined",
             "room_id": room_id,
-            "game_state": room.game_state.model_dump()
+            "game_state": room.game_state.model_dump(),
+            "players": {
+                "player1": {"id": room.player1.id, "name": room.player1.name, "is_ready": room.player1.is_ready},
+                "player2": {"id": room.player2.id, "name": room.player2.name, "is_ready": room.player2.is_ready} if room.player2 else None
+            }
         })
         return True
 
