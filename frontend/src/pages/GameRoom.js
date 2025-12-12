@@ -223,7 +223,7 @@ export default function GameRoom() {
                         <h2 className="text-4xl font-heading text-white">YOU ARE READY</h2>
                         <p className="text-muted-foreground">Waiting for host to start...</p>
                         
-                        {gameState.player1 && gameState.player1.id === clientId && (
+                        {isHost && (
                              <Button 
                                 onClick={startGame} 
                                 size="lg" 
