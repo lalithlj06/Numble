@@ -8,7 +8,7 @@ export const useGame = () => useContext(GameContext);
 
 export const GameProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [clientId, setClientId] = useState(localStorage.getItem('clientId') || uuidv4());
+  const [clientId, setClientId] = useState(uuidv4());
   const [isConnected, setIsConnected] = useState(false);
   const [gameState, setGameState] = useState(null);
   const [roomId, setRoomId] = useState(null);
