@@ -39,7 +39,8 @@ export default function GameRoom() {
     rematch, 
     clientId, 
     messages,
-    players 
+    players,
+    isHost
   } = useGame();
 
   const [nameInput, setNameInput] = useState("");
