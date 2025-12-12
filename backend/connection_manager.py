@@ -128,7 +128,7 @@ class ConnectionManager:
         
         await self.broadcast_to_room(room_id, {
             "type": "game_started",
-            "game_state": room.game_state.dict()
+            "game_state": room.game_state.model_dump()
         })
 
     async def submit_guess(self, client_id: str, room_id: str, guess: str):
@@ -228,5 +228,5 @@ class ConnectionManager:
         
         await self.broadcast_to_room(room_id, {
             "type": "rematch_started",
-            "game_state": room.game_state.dict()
+            "game_state": room.game_state.model_dump()
         })
