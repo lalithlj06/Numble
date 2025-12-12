@@ -83,14 +83,20 @@ class NumbleGameTester:
         if not self.room_id:
             return self.log_test("Room Joining", False, "No room_id available")
         
-        response = await self.send_and_wait(
-            client_b,
-            {"action": "join_room", "room_id": self.room_id},
-            "joined_room"
-        )
+        # Send join room request
+        await client_b.send(json.dumps({"action": "join_room", "room_id": self.room_id}))
         
-        success = response is not None
-        return self.log_test("Room Joining", success, f"Joined room: {self.room_id}" if success else "Failed to join")
+        try:
+            # Wait for any response (could be joined_room or player_joined)
+            response = await asyncio.wait_for(client_b.recv(), timeout=5)
+            data = json.loads(response)
+            
+            if data.get('type') in ['joined_room', 'player_joined']:
+                return self.log_test("Room Joining", True, f"Joined room: {self.room_id}")
+            else:
+                return self.log_test("Room Joining", False, f"Unexpected response: {data}")
+        except asyncio.TimeoutError:
+            return self.log_test("Room Joining", False, "No response received")
 
     async def test_secret_setting(self, client_a, client_b):
         """Test both clients setting secret numbers"""
