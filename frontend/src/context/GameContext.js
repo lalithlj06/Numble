@@ -60,6 +60,7 @@ export const GameProvider = ({ children }) => {
         break;
       case 'joined_room':
         setRoomId(data.room_id);
+        // The game state will be updated by the subsequent player_joined message
         break;
       case 'player_joined':
         if (!roomId && data.room_id) {
