@@ -32,13 +32,10 @@ export default function Lobby() {
         className="w-full max-w-md space-y-8 z-10"
       >
         <div className="text-center space-y-2">
-          <motion.h1 
-            className="text-6xl md:text-8xl font-heading font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary neon-text"
-            animate={{ textShadow: ["0 0 10px rgba(0,255,148,0.5)", "0 0 20px rgba(0,255,148,0.8)", "0 0 10px rgba(0,255,148,0.5)"] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
+          {/* Static Logo per requirements */}
+          <h1 className="text-6xl md:text-8xl font-heading font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary neon-text">
             NUMBLE
-          </motion.h1>
+          </h1>
           <p className="text-muted-foreground text-lg italic tracking-wider">Think fast or stay last.</p>
         </div>
 

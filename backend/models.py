@@ -7,6 +7,7 @@ class GuessResult(BaseModel):
 
 class Player(BaseModel):
     id: str
+    name: Optional[str] = None
     is_host: bool = False
     connected: bool = True
     is_ready: bool = False
@@ -17,7 +18,8 @@ class Player(BaseModel):
 class GameState(BaseModel):
     status: Literal["waiting", "setup", "playing", "finished"] = "waiting"
     winner_id: Optional[str] = None
-    current_turn: Optional[str] = None
+    start_time: Optional[str] = None
+    current_turn: Optional[str] = None # Not really used in free-for-all but kept for compat
 
 class Room(BaseModel):
     id: str

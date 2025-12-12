@@ -47,10 +47,11 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 else:
                     await manager.send_personal_message({"type": "error", "message": "Room full or invalid"}, websocket)
 
-            elif action == "set_secret":
+            elif action == "set_setup":
                 room_id = data.get("room_id")
+                name = data.get("name")
                 secret = data.get("secret")
-                await manager.set_secret(client_id, room_id, secret)
+                await manager.set_player_setup(client_id, room_id, name, secret)
 
             elif action == "start_game":
                 room_id = data.get("room_id")
@@ -66,10 +67,10 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 await manager.rematch(room_id)
 
     except WebSocketDisconnect:
-        manager.disconnect(client_id)
+        await manager.disconnect(client_id)
     except Exception as e:
         logging.error(f"WebSocket error: {e}")
-        manager.disconnect(client_id)
+        await manager.disconnect(client_id)
 
 
 # --- API Routes ---
@@ -83,7 +84,7 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=["*"], # In production, restrict this
+    allow_origins=["*"], 
     allow_methods=["*"],
     allow_headers=["*"],
 )
