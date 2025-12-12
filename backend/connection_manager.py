@@ -75,13 +75,15 @@ class ConnectionManager:
         await self.broadcast_to_room(room_id, {
             "type": "player_joined",
             "room_id": room_id,
-            "game_state": room.game_state.dict()
+            "game_state": room.game_state.model_dump()
         })
         return True
 
     async def set_secret(self, client_id: str, room_id: str, secret: str):
+        print(f"Setting secret for {client_id} in {room_id}: {secret}")
         if room_id not in self.rooms:
             return
+
         
         room = self.rooms[room_id]
         
