@@ -227,7 +227,7 @@ export default function GameRoom() {
                                 onClick={startGame} 
                                 size="lg" 
                                 className="mt-4 w-64 h-16 text-xl"
-                                disabled={!players?.player1?.is_ready || !players?.player2?.is_ready}
+                                disabled={!gameState.player1?.is_ready || !gameState.player2?.is_ready}
                              >
                                 LET'S BEGIN
                              </Button>
