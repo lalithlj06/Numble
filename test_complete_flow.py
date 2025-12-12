@@ -105,8 +105,8 @@ class CompleteFlowTester:
             
             # Step 3: Both players set secrets
             print(f"\n🔐 Step 3: Setting secret numbers...")
-            await client_a.send(json.dumps({"action": "set_secret", "room_id": self.room_id, "secret": "1234"}))
-            await client_b.send(json.dumps({"action": "set_secret", "room_id": self.room_id, "secret": "5678"}))
+            await client_a.send(json.dumps({"action": "set_setup", "room_id": self.room_id, "name": "Player A", "secret": "1234"}))
+            await client_b.send(json.dumps({"action": "set_setup", "room_id": self.room_id, "name": "Player B", "secret": "5678"}))
             
             # Wait for ready messages
             await asyncio.sleep(2)
