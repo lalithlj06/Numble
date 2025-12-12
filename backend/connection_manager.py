@@ -152,7 +152,11 @@ class ConnectionManager:
             "type": "player_ready",
             "player_id": client_id,
             "name": name,
-            "game_state": room.game_state.model_dump()
+            "game_state": room.game_state.model_dump(),
+            "players": {
+                "player1": {"id": room.player1.id, "name": room.player1.name, "is_ready": room.player1.is_ready},
+                "player2": {"id": room.player2.id, "name": room.player2.name, "is_ready": room.player2.is_ready} if room.player2 else None
+            }
         })
 
     async def start_game(self, client_id: str, room_id: str):
