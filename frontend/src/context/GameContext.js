@@ -61,6 +61,10 @@ export const GameProvider = ({ children }) => {
         // We'll get player_joined next to update state
         break;
       case 'player_joined':
+        // Set room ID if not already set (for joining player)
+        if (!roomId && data.room_id) {
+          setRoomId(data.room_id);
+        }
         setGameState(data.game_state);
         toast.success("Player joined!");
         break;
