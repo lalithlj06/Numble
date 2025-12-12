@@ -102,6 +102,20 @@ export default function GameRoom() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col md:flex-row gap-8 items-start justify-center pt-20">
             
+            {/* WAITING PHASE - Waiting for second player to join */}
+            {gameState.status === 'waiting' && (
+                <div className="absolute inset-0 flex items-center justify-center z-40 bg-black/80 backdrop-blur-sm">
+                    <div className="text-center space-y-4">
+                        <h2 className="text-4xl font-heading text-primary animate-pulse">WAITING FOR OPPONENT...</h2>
+                        <p className="text-muted-foreground">Share your room code with a friend to start playing!</p>
+                        <div className="glass-panel p-4 rounded-xl">
+                            <p className="text-sm text-muted-foreground mb-2">Room Code:</p>
+                            <p className="text-3xl font-bold tracking-widest text-primary">{roomId}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
             {/* SETUP PHASE */}
             {gameState.status === 'setup' && !isReady && (
                 <div className="absolute inset-0 flex items-center justify-center z-40 bg-black/80 backdrop-blur-sm">
