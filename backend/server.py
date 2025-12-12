@@ -27,7 +27,7 @@ api_router = APIRouter(prefix="/api")
 manager = ConnectionManager()
 
 # --- WebSocket ---
-@app.websocket("/ws/{client_id}")
+@app.websocket("/api/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await manager.connect(websocket, client_id)
     try:
