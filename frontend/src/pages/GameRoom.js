@@ -228,7 +228,7 @@ export default function GameRoom() {
                                 onClick={startGame} 
                                 size="lg" 
                                 className="mt-4 w-64 h-16 text-xl"
-                                disabled={!gameState.player1?.is_ready || !gameState.player2?.is_ready}
+                                disabled={!players?.player1?.is_ready || !players?.player2?.is_ready}
                              >
                                 LET'S BEGIN
                              </Button>
@@ -236,11 +236,11 @@ export default function GameRoom() {
                         
                         <div className="flex gap-8 justify-center mt-8">
                              <div className="flex flex-col items-center">
-                                 <div className={`w-3 h-3 rounded-full mb-2 ${gameState.player1?.is_ready ? 'bg-primary shadow-[0_0_10px_#00FF94]' : 'bg-gray-700'}`} />
+                                 <div className={`w-3 h-3 rounded-full mb-2 ${players?.player1?.is_ready ? 'bg-primary shadow-[0_0_10px_#00FF94]' : 'bg-gray-700'}`} />
                                  <span className="text-sm">PLAYER 1</span>
                              </div>
                              <div className="flex flex-col items-center">
-                                 <div className={`w-3 h-3 rounded-full mb-2 ${gameState.player2?.is_ready ? 'bg-primary shadow-[0_0_10px_#00FF94]' : 'bg-gray-700'}`} />
+                                 <div className={`w-3 h-3 rounded-full mb-2 ${players?.player2?.is_ready ? 'bg-primary shadow-[0_0_10px_#00FF94]' : 'bg-gray-700'}`} />
                                  <span className="text-sm">PLAYER 2</span>
                              </div>
                         </div>
