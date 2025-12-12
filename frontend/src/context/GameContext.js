@@ -22,7 +22,7 @@ export const GameProvider = ({ children }) => {
     // Construct WebSocket URL
     const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
     const wsProtocol = backendUrl.startsWith('https') ? 'wss' : 'ws';
-    const wsUrl = `${wsProtocol}://${backendUrl.split('://')[1]}/ws/${clientId}`;
+    const wsUrl = `${wsProtocol}://${backendUrl.split('://')[1]}/api/ws/${clientId}`;
 
     const ws = new WebSocket(wsUrl);
 
