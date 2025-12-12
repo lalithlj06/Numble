@@ -8,7 +8,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from typing import List
 import uuid
-from .connection_manager import ConnectionManager
+from connection_manager import ConnectionManager
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
