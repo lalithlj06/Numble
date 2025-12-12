@@ -15,6 +15,7 @@ export const GameProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [playerSecret, setPlayerSecret] = useState(null);
   const [players, setPlayers] = useState({});
+  const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
     // Don't store clientId in localStorage to avoid conflicts between tabs
