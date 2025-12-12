@@ -39,7 +39,7 @@ class NumbleGameTester:
     async def connect_client(self, client_id):
         """Connect a WebSocket client"""
         try:
-            uri = f"{self.ws_url}/ws/{client_id}"
+            uri = f"{self.ws_url}/api/ws/{client_id}"
             websocket = await websockets.connect(uri)
             return websocket
         except Exception as e:
