@@ -58,6 +58,7 @@ export const GameProvider = ({ children }) => {
       case 'room_created':
         setRoomId(data.room_id);
         setGameState({ status: 'waiting' });
+        setIsHost(true); // User who creates room is the host
         toast.success(`Room created! Code: ${data.room_id}`);
         break;
       case 'joined_room':
