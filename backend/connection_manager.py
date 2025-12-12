@@ -1,7 +1,7 @@
 from typing import List, Dict, Optional
 from fastapi import WebSocket
-from .models import Room, Player, GameState, GuessResult
-from .game_logic import validate_guess, validate_secret
+from models import Room, Player, GameState, GuessResult
+from game_logic import validate_guess, validate_secret
 import json
 import asyncio
 import uuid
