@@ -101,6 +101,9 @@ class ConnectionManager:
         room.player2 = Player(id=client_id, is_host=False)
         room.game_state.status = "setup"
         
+        # Small delay to ensure WebSocket connection is fully established
+        await asyncio.sleep(0.1)
+        
         # Notify both players
         await self.broadcast_to_room(room_id, {
             "type": "player_joined",
