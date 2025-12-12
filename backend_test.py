@@ -127,7 +127,7 @@ class NumbleGameTester:
         try:
             # Wait for error response
             response = await asyncio.wait_for(client_a.recv(), timeout=3)
-            data = json.parse(response)
+            data = json.loads(response)
             
             if data.get('type') == 'error' and 'Invalid secret' in data.get('message', ''):
                 return self.log_test("Invalid Secret Validation", True, "Correctly rejected '1122'")
