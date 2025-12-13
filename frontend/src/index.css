@@ -46,13 +46,14 @@
 }
 
 .neon-text {
-  text-shadow: 0 0 10px rgba(0, 255, 148, 0.5);
+  /* Sharper shadow, less blur */
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 255, 148, 0.8);
 }
 
 .neon-border {
-  box-shadow: 0 0 15px rgba(160, 32, 240, 0.3);
+  box-shadow: 0 0 10px rgba(160, 32, 240, 0.2);
 }
 
 .glass-panel {
-  @apply backdrop-blur-xl bg-black/40 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)];
+  @apply backdrop-blur-xl bg-black/60 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)];
 }
