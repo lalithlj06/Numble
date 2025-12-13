@@ -28,8 +28,8 @@ export default function Lobby() {
 
       <div className="w-full max-w-md space-y-8 z-10 flex flex-col items-center">
         <div className="text-center space-y-4">
-          {/* Static Logo - Sharp, No Blur, No Animation */}
-          <h1 className="text-5xl md:text-8xl font-heading font-black tracking-widest text-primary neon-text select-none">
+          {/* Static Logo - Sharp, No Blur, No Animation, Mild Gradient */}
+          <h1 className="text-5xl md:text-8xl font-heading font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#00FF94] to-[#00F0FF] drop-shadow-md select-none">
             NUMBLE
           </h1>
           <p className="text-muted-foreground text-base md:text-lg italic tracking-wider">
