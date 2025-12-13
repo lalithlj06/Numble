@@ -142,7 +142,7 @@ export default function GameRoom() {
             <div className="flex justify-between items-center p-2 md:p-4">
                 {/* Left: Logo & Room */}
                 <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-                    <div className="font-heading text-lg md:text-2xl text-primary neon-text tracking-widest leading-none">NUMBLE</div>
+                    <div className="font-heading text-lg md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-[#00FF94] to-[#00F0FF] tracking-widest leading-none drop-shadow-sm">NUMBLE</div>
                     <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground font-mono">
                         ROOM: <span className="text-white font-bold">{roomId}</span>
                         <Copy className="w-3 h-3 cursor-pointer hover:text-primary" onClick={copyRoomCode} />
