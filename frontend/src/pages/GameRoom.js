@@ -253,7 +253,7 @@ export default function GameRoom() {
                     {gameState.status === 'finished' && gameResult && (
                         <div className="text-center space-y-6">
                             <h1 className={`text-5xl md:text-8xl font-black font-heading ${gameResult === 'WIN' ? 'text-primary neon-text' : gameResult === 'LOSE' ? 'text-destructive' : 'text-accent'}`}>
-                                {gameResult === 'WIN' ? 'YOU WON' : gameResult === 'LOSE' ? 'YOU LOST' : 'DRAW'}
+                                {gameResult === 'WIN' ? `${myName} WINS` : gameResult === 'LOSE' ? `${myName} LOSES` : 'DRAW'}
                             </h1>
                             <div className="flex gap-8 justify-center py-4">
                                 <div className="text-center">
