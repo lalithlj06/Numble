@@ -23,7 +23,7 @@ const Row = ({ guess, isMe }) => {
                     initial={{ rotateX: 0 }}
                     animate={{ rotateX: 360 }}
                     transition={{ delay: i * 0.1, duration: 0.5 }}
-                    className={`w-14 h-14 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-3xl font-mono font-bold border-2 rounded-md ${TILE_COLORS[feedback]}`}
+                    className={`w-8 h-8 sm:w-10 sm:h-10 md:w-16 md:h-16 flex items-center justify-center text-lg sm:text-xl md:text-3xl font-mono font-bold border-2 rounded-md ${TILE_COLORS[feedback]}`}
                 >
                     {digit}
                 </motion.div>
@@ -32,13 +32,13 @@ const Row = ({ guess, isMe }) => {
     } else {
         for (let i = 0; i < 4; i++) {
             tiles.push(
-                <div key={i} className={`w-14 h-14 md:w-16 md:h-16 border-2 rounded-md ${TILE_COLORS.empty}`} />
+                <div key={i} className={`w-8 h-8 sm:w-10 sm:h-10 md:w-16 md:h-16 border-2 rounded-md ${TILE_COLORS.empty}`} />
             );
         }
     }
 
     return (
-        <div className="flex gap-2 justify-center mb-2">
+        <div className="flex gap-1 md:gap-2 justify-center mb-1 md:mb-2">
             {tiles}
         </div>
     );
