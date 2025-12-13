@@ -309,7 +309,7 @@ export default function GameRoom() {
 
         {/* INPUT AREA - Bottom Fixed */}
         {gameState.status === 'playing' && (
-            <div className="fixed bottom-0 left-0 w-full p-4 glass-panel border-t border-white/10 z-30">
+            <div className="fixed bottom-0 left-0 w-full p-4 pb-12 glass-panel border-t border-white/10 z-30">
                 <form onSubmit={handleSubmitGuess} className="flex gap-2 max-w-md mx-auto">
                      <Input 
                         value={guessInput}
