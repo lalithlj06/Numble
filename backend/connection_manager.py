@@ -51,6 +51,11 @@ class ConnectionManager:
         
         # Check if player was in a room and handle disconnect
         for room_id, room in self.rooms.items():
+            # If room state is not fully loaded/synced with DB, we might miss this check
+            # But disconnecting only matters for ACTIVE rooms in memory.
+            # If room is not in memory (after restart), no one is connected to it anyway.
+            # So iterating self.rooms is correct.
+            
             player_in_room = False
             opponent = None
             player_name = "Unknown"
