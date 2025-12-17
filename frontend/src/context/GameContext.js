@@ -52,7 +52,8 @@ export const GameProvider = ({ children }) => {
 
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
-      toast.error('Connection error occurred');
+      // Suppress toast on error to avoid initial connection jitter warnings
+      // toast.error('Connection error occurred');
     };
 
     setSocket(ws);
