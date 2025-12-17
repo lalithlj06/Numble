@@ -295,9 +295,9 @@ class ConnectionManager:
             await self.save_room(room)
 
     async def rematch(self, room_id: str):
-        if room_id not in self.rooms:
+        room = await self.get_room(room_id)
+        if not room:
             return
-        room = self.rooms[room_id]
         
         # Reset state
         room.player1.secret_number = None
