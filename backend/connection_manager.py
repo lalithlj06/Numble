@@ -11,11 +11,34 @@ from datetime import datetime, timezone
 logger = logging.getLogger(__name__)
 
 class ConnectionManager:
-    def __init__(self):
+    def __init__(self, db):
         # Room ID -> Room object
         self.rooms: Dict[str, Room] = {}
         # Client ID -> WebSocket
         self.active_connections: Dict[str, WebSocket] = {}
+        self.db = db
+
+    async def get_room(self, room_id: str) -> Optional[Room]:
+        if room_id in self.rooms:
+            return self.rooms[room_id]
+        
+        # Try to fetch from DB
+        try:
+            doc = await self.db.rooms.find_one({"id": room_id})
+            if doc:
+                if "_id" in doc: del doc["_id"]
+                room = Room(**doc)
+                self.rooms[room_id] = room
+                return room
+        except Exception as e:
+            logger.error(f"Error fetching room {room_id} from DB: {e}")
+        return None
+
+    async def save_room(self, room: Room):
+        try:
+            await self.db.rooms.replace_one({"id": room.id}, room.model_dump(), upsert=True)
+        except Exception as e:
+            logger.error(f"Error saving room {room.id} to DB: {e}")
 
     async def connect(self, websocket: WebSocket, client_id: str):
         await websocket.accept()
