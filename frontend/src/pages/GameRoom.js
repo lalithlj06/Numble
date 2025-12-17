@@ -134,6 +134,14 @@ export default function GameRoom() {
 
   if (!gameState) return <div className="flex h-screen items-center justify-center text-primary animate-pulse">CONNECTING...</div>;
 
+  useEffect(() => {
+    // If we have a roomId and socket connects (reconnect/refresh), rejoin to sync state
+    if (isConnected && roomId) {
+        console.log("Re-syncing state for room:", roomId);
+        joinRoom(roomId);
+    }
+  }, [isConnected, roomId]);
+
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
         
