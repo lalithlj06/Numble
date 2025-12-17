@@ -110,18 +110,20 @@ class ConnectionManager:
 
     async def create_room(self, client_id: str) -> str:
         room_id = str(uuid.uuid4())[:6].upper()
-        self.rooms[room_id] = Room(
+        room = Room(
             id=room_id,
             player1=Player(id=client_id, is_host=True),
             game_state=GameState(status="waiting")
         )
+        self.rooms[room_id] = room
+        await self.save_room(room)
         return room_id
 
     async def join_room(self, client_id: str, room_id: str) -> bool:
-        if room_id not in self.rooms:
+        room = await self.get_room(room_id)
+        if not room:
             return False
         
-        room = self.rooms[room_id]
         if room.player2 is not None:
             return False # Room full
         
@@ -131,6 +133,7 @@ class ConnectionManager:
 
         room.player2 = Player(id=client_id, is_host=False)
         room.game_state.status = "setup"
+        await self.save_room(room)
         
         logger.info(f"Player {client_id} joined room {room_id}. Active connections: {list(self.active_connections.keys())}")
         
