@@ -129,6 +129,19 @@ class ConnectionManager:
         if not room:
             return False
         
+        # If player is already in the room, just sync them and return True
+        if room.player1.id == client_id or (room.player2 and room.player2.id == client_id):
+            await self.active_connections[client_id].send_json({
+                "type": "player_joined",
+                "room_id": room_id,
+                "game_state": room.game_state.model_dump(),
+                "players": {
+                    "player1": {"id": room.player1.id, "name": room.player1.name, "is_ready": room.player1.is_ready},
+                    "player2": {"id": room.player2.id, "name": room.player2.name, "is_ready": room.player2.is_ready} if room.player2 else None
+                }
+            })
+            return True
+
         if room.player2 is not None:
             return False # Room full
         
