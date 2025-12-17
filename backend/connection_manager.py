@@ -152,10 +152,9 @@ class ConnectionManager:
         return True
 
     async def set_player_setup(self, client_id: str, room_id: str, name: str, secret: str):
-        if room_id not in self.rooms:
+        room = await self.get_room(room_id)
+        if not room:
             return
-        
-        room = self.rooms[room_id]
         
         if not validate_secret(secret):
              await self.send_personal_message({"type": "error", "message": "Invalid secret number"}, self.active_connections[client_id])
