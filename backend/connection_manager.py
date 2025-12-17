@@ -90,11 +90,10 @@ class ConnectionManager:
         await websocket.send_json(message)
 
     async def broadcast_to_room(self, room_id: str, message: dict):
-        if room_id not in self.rooms:
+        room = await self.get_room(room_id)
+        if not room:
             logger.warning(f"Room {room_id} not found for broadcast")
             return
-        
-        room = self.rooms[room_id]
         
         if room.player1 and room.player1.id in self.active_connections:
             await self.active_connections[room.player1.id].send_json(message)
