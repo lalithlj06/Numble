@@ -210,9 +210,9 @@ class ConnectionManager:
         await self.save_room(room)
 
     async def submit_guess(self, client_id: str, room_id: str, guess: str):
-        if room_id not in self.rooms:
+        room = await self.get_room(room_id)
+        if not room:
             return
-        room = self.rooms[room_id]
         
         if room.game_state.status != "playing":
             return
