@@ -24,7 +24,7 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-manager = ConnectionManager()
+manager = ConnectionManager(db)
 
 # --- WebSocket ---
 @app.websocket("/api/ws/{client_id}")
