@@ -186,9 +186,9 @@ class ConnectionManager:
         await self.save_room(room)
 
     async def start_game(self, client_id: str, room_id: str):
-        if room_id not in self.rooms:
+        room = await self.get_room(room_id)
+        if not room:
             return
-        room = self.rooms[room_id]
         
         if room.player1.id != client_id:
             return # Only host can start
