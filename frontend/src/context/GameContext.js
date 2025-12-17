@@ -50,6 +50,11 @@ export const GameProvider = ({ children }) => {
       setIsConnected(false);
     };
 
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      toast.error('Connection error occurred');
+    };
+
     setSocket(ws);
 
     return () => {
