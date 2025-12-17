@@ -146,9 +146,8 @@ class ConnectionManager:
             return False # Room full
         
         # Prevent joining same room twice
-        if room.player1.id == client_id:
-            return True
-
+        # Handled above
+        
         room.player2 = Player(id=client_id, is_host=False)
         room.game_state.status = "setup"
         await self.save_room(room)
