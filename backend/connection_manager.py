@@ -207,6 +207,7 @@ class ConnectionManager:
                 "player2": {"id": room.player2.id, "name": room.player2.name}
             }
         })
+        await self.save_room(room)
 
     async def submit_guess(self, client_id: str, room_id: str, guess: str):
         if room_id not in self.rooms:
