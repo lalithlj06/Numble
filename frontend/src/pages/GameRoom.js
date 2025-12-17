@@ -40,7 +40,9 @@ export default function GameRoom() {
     clientId, 
     messages,
     players,
-    isHost
+    isHost,
+    isConnected,
+    joinRoom
   } = useGame();
 
   const [nameInput, setNameInput] = useState("");
