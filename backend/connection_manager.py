@@ -282,6 +282,7 @@ class ConnectionManager:
                  "p1_secret": room.player1.secret_number,
                  "p2_secret": room.player2.secret_number
              })
+             await self.save_room(room)
         else:
             # Just a guess
             await self.broadcast_to_room(room_id, {
@@ -291,6 +292,7 @@ class ConnectionManager:
                 "feedback": feedback,
                 "attempt": len(player.guesses)
             })
+            await self.save_room(room)
 
     async def rematch(self, room_id: str):
         if room_id not in self.rooms:
