@@ -84,6 +84,7 @@ class ConnectionManager:
                         "p1_secret": room.player1.secret_number,
                         "p2_secret": room.player2.secret_number
                     })
+                    await self.save_room(room)
             elif player_in_room:
                  # Just notify disconnection if not playing
                  await self.broadcast_to_room(room_id, {
