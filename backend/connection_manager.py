@@ -318,3 +318,4 @@ class ConnectionManager:
             "type": "rematch_started",
             "game_state": room.game_state.model_dump()
         })
+        await self.save_room(room)
