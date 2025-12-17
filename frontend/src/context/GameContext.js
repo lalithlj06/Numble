@@ -8,7 +8,14 @@ export const useGame = () => useContext(GameContext);
 
 export const GameProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [clientId, setClientId] = useState(uuidv4());
+  // Use sessionStorage to persist ID across refreshes but keep unique per tab
+  const [clientId] = useState(() => {
+    const stored = sessionStorage.getItem('clientId');
+    if (stored) return stored;
+    const newId = uuidv4();
+    sessionStorage.setItem('clientId', newId);
+    return newId;
+  });
   const [isConnected, setIsConnected] = useState(false);
   const [gameState, setGameState] = useState(null);
   const [roomId, setRoomId] = useState(null);
