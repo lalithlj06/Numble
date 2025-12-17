@@ -183,6 +183,7 @@ class ConnectionManager:
                 "player2": {"id": room.player2.id, "name": room.player2.name, "is_ready": room.player2.is_ready} if room.player2 else None
             }
         })
+        await self.save_room(room)
 
     async def start_game(self, client_id: str, room_id: str):
         if room_id not in self.rooms:
