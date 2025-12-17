@@ -259,6 +259,7 @@ class ConnectionManager:
                  "p1_secret": room.player1.secret_number,
                  "p2_secret": room.player2.secret_number
              })
+            await self.save_room(room)
              
         elif len(player.guesses) >= 6 and len(opponent.guesses) >= 6 and not opponent.has_won:
              # Both exhausted guesses -> Draw (or loss for both?)
