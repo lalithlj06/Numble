@@ -68,7 +68,8 @@ export const GameProvider = ({ children }) => {
       if (!currentRoomId) return;
       try {
           const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
-          const response = await axios.get(`${backendUrl}/api/rooms/${currentRoomId}`);
+          // Add timestamp to bust cache
+          const response = await axios.get(`${backendUrl}/api/rooms/${currentRoomId}?t=${Date.now()}`);
           const room = response.data;
           
           if (room) {
@@ -84,31 +85,34 @@ export const GameProvider = ({ children }) => {
               
               // Determine if host
               if (room.player1.id === clientId) setIsHost(true);
-              
-              // If waiting and player2 is now present, we are setup!
-              if (room.player2 && room.game_state.status === 'waiting') {
-                   // Force update to setup if backend hasn't yet (race condition) or if we missed the event
-                   // Actually backend should have updated status to 'setup' when p2 joined.
-                   // If backend status is 'setup', setGameState handles it.
-              }
           }
       } catch (error) {
           console.error("Error fetching room state:", error);
       }
   }, [clientId]);
 
-  // Polling Logic
+  // Polling Logic & Visibility Handler
   useEffect(() => {
       if (roomId) {
-          // Poll every 2 seconds if in critical states or just generally to keep sync
+          // Poll every 2 seconds
           pollInterval.current = setInterval(() => {
               fetchRoomState(roomId);
           }, 2000);
+          
+          // Force fetch on wake-up (tab focus)
+          const handleVisibilityChange = () => {
+              if (document.visibilityState === 'visible') {
+                  console.log("Tab visible, forcing state sync...");
+                  fetchRoomState(roomId);
+              }
+          };
+          document.addEventListener('visibilitychange', handleVisibilityChange);
+          
+          return () => {
+              if (pollInterval.current) clearInterval(pollInterval.current);
+              document.removeEventListener('visibilitychange', handleVisibilityChange);
+          };
       }
-      
-      return () => {
-          if (pollInterval.current) clearInterval(pollInterval.current);
-      };
   }, [roomId, fetchRoomState]);
 
 
