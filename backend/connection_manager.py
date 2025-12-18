@@ -130,9 +130,11 @@ class ConnectionManager:
             game_state=GameState(status="waiting")
         )
         await self.save_room(room)
+        self.client_room_map[client_id] = room_id
         return room_id
 
     async def join_room(self, client_id: str, room_id: str) -> str:
+        self.client_room_map[client_id] = room_id
         room = await self.get_room(room_id)
         if not room:
             return "not_found"
