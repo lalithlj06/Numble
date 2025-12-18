@@ -113,7 +113,6 @@ class ConnectionManager:
             player1=Player(id=client_id, is_host=True),
             game_state=GameState(status="waiting")
         )
-        self.rooms[room_id] = room
         await self.save_room(room)
         return room_id
 
