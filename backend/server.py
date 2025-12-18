@@ -41,11 +41,15 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 
             elif action == "join_room":
                 room_id = data.get("room_id")
-                success = await manager.join_room(client_id, room_id)
-                if success:
+                result = await manager.join_room(client_id, room_id)
+                if result == "success":
                     await manager.send_personal_message({"type": "joined_room", "room_id": room_id}, websocket)
+                elif result == "full":
+                    await manager.send_personal_message({"type": "error", "message": "Room is full"}, websocket)
+                elif result == "not_found":
+                    await manager.send_personal_message({"type": "error", "message": "Room not found"}, websocket)
                 else:
-                    await manager.send_personal_message({"type": "error", "message": "Room full or invalid"}, websocket)
+                    await manager.send_personal_message({"type": "error", "message": "Join failed"}, websocket)
 
             elif action == "set_setup":
                 room_id = data.get("room_id")
