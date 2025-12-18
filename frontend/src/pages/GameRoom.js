@@ -56,7 +56,36 @@ export default function GameRoom() {
   const [revealedSecrets, setRevealedSecrets] = useState(null);
   const [winnerName, setWinnerName] = useState("");
 
-  // Listen for game events
+    useEffect(() => {
+        // Derive Game Result from Authoritative State (not just transient messages)
+        if (gameState?.status === 'finished') {
+            setRevealedSecrets({ 
+                p1: players?.player1?.secret_number, 
+                p2: players?.player2?.secret_number 
+            });
+            
+            if (gameState.winner_id === clientId) {
+                setGameResult("WIN");
+                setWinnerName(myName);
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#A020F0', '#FFD700', '#00FF94']
+                });
+            } else if (gameState.winner_id === null) {
+                setGameResult("DRAW");
+                setWinnerName(null);
+            } else {
+                setGameResult("LOSE");
+                setWinnerName(oppName);
+            }
+        } else {
+            setGameResult(null); // Reset if not finished
+        }
+    }, [gameState, players, clientId, myName, oppName]);
+
+  // Listen for game events (Only for non-state events like toasts if needed, but state is king)
   useEffect(() => {
     if (messages.length > 0) {
         const lastMsg = messages[messages.length - 1];
@@ -80,24 +109,8 @@ export default function GameRoom() {
             setGameResult(null);
             setRevealedSecrets(null);
             setWinnerName("");
-        } else if (lastMsg.type === 'game_over') {
-             setRevealedSecrets({ p1: lastMsg.p1_secret, p2: lastMsg.p2_secret });
-             setWinnerName(lastMsg.winner_name || "Unknown");
-             
-             if (lastMsg.winner_id === clientId) {
-                 setGameResult("WIN");
-                 confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: ['#A020F0', '#FFD700', '#00FF94']
-                 });
-             } else if (lastMsg.winner_id === null) {
-                 setGameResult("DRAW");
-             } else {
-                 setGameResult("LOSE");
-             }
-        }
+        } 
+        // Removed 'game_over' handler here - relying on useEffect above
     }
   }, [messages, clientId]);
 
