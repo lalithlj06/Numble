@@ -14,6 +14,8 @@ class ConnectionManager:
     def __init__(self, db):
         # Client ID -> WebSocket
         self.active_connections: Dict[str, WebSocket] = {}
+        # Client ID -> Room ID (for disconnect handling)
+        self.client_room_map: Dict[str, str] = {}
         self.db = db
 
     async def get_room(self, room_id: str) -> Optional[Room]:
