@@ -60,7 +60,10 @@ export default function Lobby() {
               <Input 
                 placeholder="ENTER CODE" 
                 value={joinCode}
-                onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                    const val = e.target.value.toUpperCase().replace(/[^0-9A-F]/g, ''); // Hex only
+                    setJoinCode(val);
+                }}
                 maxLength={6}
                 className="uppercase tracking-[0.5em] font-bold text-center h-14 bg-black/40"
               />
