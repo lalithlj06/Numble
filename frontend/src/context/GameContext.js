@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
+import axios from 'axios';
 
 const GameContext = createContext();
 
@@ -24,10 +25,10 @@ export const GameProvider = ({ children }) => {
   const [players, setPlayers] = useState({});
   const [isHost, setIsHost] = useState(false);
 
+  // Polling ref
+  const pollInterval = useRef(null);
+
   useEffect(() => {
-    // Don't store clientId in localStorage to avoid conflicts between tabs
-    // localStorage.setItem('clientId', clientId);
-    
     // Construct WebSocket URL
     const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
     const wsProtocol = backendUrl.startsWith('https') ? 'wss' : 'ws';
@@ -53,7 +54,6 @@ export const GameProvider = ({ children }) => {
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
       // Suppress toast on error to avoid initial connection jitter warnings
-      // toast.error('Connection error occurred');
     };
 
     setSocket(ws);
@@ -62,6 +62,55 @@ export const GameProvider = ({ children }) => {
       ws.close();
     };
   }, [clientId]);
+
+  // Fetch Room State via REST
+  const fetchRoomState = useCallback(async (currentRoomId) => {
+      if (!currentRoomId) return;
+      try {
+          const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+          const response = await axios.get(`${backendUrl}/api/rooms/${currentRoomId}`);
+          const room = response.data;
+          
+          if (room) {
+              // Update Game State
+              setGameState(room.game_state);
+              
+              // Update Players
+              const newPlayers = {
+                  player1: room.player1,
+                  player2: room.player2
+              };
+              setPlayers(newPlayers);
+              
+              // Determine if host
+              if (room.player1.id === clientId) setIsHost(true);
+              
+              // If waiting and player2 is now present, we are setup!
+              if (room.player2 && room.game_state.status === 'waiting') {
+                   // Force update to setup if backend hasn't yet (race condition) or if we missed the event
+                   // Actually backend should have updated status to 'setup' when p2 joined.
+                   // If backend status is 'setup', setGameState handles it.
+              }
+          }
+      } catch (error) {
+          console.error("Error fetching room state:", error);
+      }
+  }, [clientId]);
+
+  // Polling Logic
+  useEffect(() => {
+      if (roomId) {
+          // Poll every 2 seconds if in critical states or just generally to keep sync
+          pollInterval.current = setInterval(() => {
+              fetchRoomState(roomId);
+          }, 2000);
+      }
+      
+      return () => {
+          if (pollInterval.current) clearInterval(pollInterval.current);
+      };
+  }, [roomId, fetchRoomState]);
+
 
   const handleServerMessage = (data) => {
     console.log("Received:", data);
@@ -73,10 +122,12 @@ export const GameProvider = ({ children }) => {
         setGameState({ status: 'waiting' });
         setIsHost(true); // User who creates room is the host
         toast.success(`Room created! Code: ${data.room_id}`);
+        // Immediate fetch to sync
+        fetchRoomState(data.room_id);
         break;
       case 'joined_room':
         setRoomId(data.room_id);
-        // The game state will be updated by the subsequent player_joined message
+        fetchRoomState(data.room_id);
         break;
       case 'player_joined':
         if (!roomId && data.room_id) {
@@ -104,11 +155,13 @@ export const GameProvider = ({ children }) => {
         if (data.reason === 'opponent_disconnected') {
              toast.error(data.message);
         }
+        fetchRoomState(roomId); // Sync final state
         break;
       case 'rematch_started':
          setGameState(data.game_state);
          setPlayerSecret(null);
          toast.success("Rematch started!");
+         fetchRoomState(roomId);
          break;
       case 'error':
         toast.error(data.message);

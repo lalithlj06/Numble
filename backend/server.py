@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -77,6 +77,20 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
 @api_router.get("/")
 async def root():
     return {"message": "NUMBLE API"}
+
+@api_router.get("/rooms/{room_id}")
+async def get_room_state(room_id: str):
+    room = await manager.get_room(room_id)
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+    
+    # Return enriched room state with convenience flags if needed, or just raw room
+    # We should return players list format similar to WS for consistency if possible, 
+    # but the frontend can parse the raw Room model too.
+    # The WS sends: "players": { "player1": {...}, "player2": {...} }
+    # The Room model has player1 and player2 objects.
+    # Let's return the Room model directly, frontend can adapt.
+    return room
 
 # Include the router in the main app
 app.include_router(api_router)
