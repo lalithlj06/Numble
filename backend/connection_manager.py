@@ -44,15 +44,28 @@ class ConnectionManager:
         if client_id in self.active_connections:
             del self.active_connections[client_id]
         
-        # Check if player was in a room and handle disconnect
-        # Since we don't have self.rooms memory cache, we rely on active connections
-        # But to find which room a player was in, we'd need to query DB or store reverse mapping
-        # For MVP, disconnecting doesn't need to auto-forfeit if we have robust reconnect.
-        # But user requirement: "If a player disconnects -> other player wins."
-        
-        # We need a way to find the room for a disconnected client.
-        # Efficient way: Store client_id -> room_id in memory map.
-        pass
+        room_id = self.client_room_map.get(client_id)
+        if room_id:
+            del self.client_room_map[client_id]
+            # Handle forfeit logic
+            room = await self.get_room(room_id)
+            if room and room.game_state.status == "playing":
+                opponent = room.player2 if room.player1.id == client_id else room.player1
+                player_name = room.player1.name if room.player1.id == client_id else room.player2.name
+                
+                if opponent:
+                    room.game_state.status = "finished"
+                    room.game_state.winner_id = opponent.id
+                    await self.save_room(room)
+                    
+                    await self.broadcast_to_room(room_id, {
+                        "type": "game_over",
+                        "winner_id": opponent.id,
+                        "reason": "opponent_disconnected",
+                        "message": f"{player_name} disconnected. You win!",
+                        "p1_secret": room.player1.secret_number,
+                        "p2_secret": room.player2.secret_number
+                    })
             opponent = None
             player_name = "Unknown"
             
