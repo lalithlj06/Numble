@@ -158,7 +158,7 @@ class ConnectionManager:
                 "player2": {"id": room.player2.id, "name": room.player2.name, "is_ready": room.player2.is_ready} if room.player2 else None
             }
         })
-        return True
+        return "success"
 
     async def set_player_setup(self, client_id: str, room_id: str, name: str, secret: str):
         room = await self.get_room(room_id)
