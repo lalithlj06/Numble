@@ -12,24 +12,17 @@ logger = logging.getLogger(__name__)
 
 class ConnectionManager:
     def __init__(self, db):
-        # Room ID -> Room object
-        self.rooms: Dict[str, Room] = {}
         # Client ID -> WebSocket
         self.active_connections: Dict[str, WebSocket] = {}
         self.db = db
 
     async def get_room(self, room_id: str) -> Optional[Room]:
-        if room_id in self.rooms:
-            return self.rooms[room_id]
-        
-        # Try to fetch from DB
+        # Always fetch from DB for authoritative state
         try:
             doc = await self.db.rooms.find_one({"id": room_id})
             if doc:
                 if "_id" in doc: del doc["_id"]
-                room = Room(**doc)
-                self.rooms[room_id] = room
-                return room
+                return Room(**doc)
         except Exception as e:
             logger.error(f"Error fetching room {room_id} from DB: {e}")
         return None
