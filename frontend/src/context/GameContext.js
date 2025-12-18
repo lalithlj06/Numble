@@ -176,7 +176,8 @@ export const GameProvider = ({ children }) => {
   };
 
   const joinRoom = (code) => {
-    socket.send(JSON.stringify({ action: 'join_room', room_id: code }));
+    if (!code) return;
+    socket.send(JSON.stringify({ action: 'join_room', room_id: code.trim() }));
   };
 
   const setSetup = (name, secret) => {
