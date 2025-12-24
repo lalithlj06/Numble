@@ -63,9 +63,13 @@ export const GameProvider = ({ children }) => {
     };
   }, [clientId]);
 
+  const isFetchingRef = useRef(false);
+
   // Fetch Room State via REST
   const fetchRoomState = useCallback(async (currentRoomId) => {
-      if (!currentRoomId) return;
+      if (!currentRoomId || isFetchingRef.current) return;
+      
+      isFetchingRef.current = true;
       try {
           const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
           // Add timestamp to bust cache
@@ -74,20 +78,33 @@ export const GameProvider = ({ children }) => {
           
           if (room) {
               // Update Game State
-              setGameState(room.game_state);
+              setGameState(prev => {
+                  // Only update if changed to avoid unnecessary re-renders
+                  if (JSON.stringify(prev) !== JSON.stringify(room.game_state)) {
+                      return room.game_state;
+                  }
+                  return prev;
+              });
               
               // Update Players
               const newPlayers = {
                   player1: room.player1,
                   player2: room.player2
               };
-              setPlayers(newPlayers);
+              setPlayers(prev => {
+                   if (JSON.stringify(prev) !== JSON.stringify(newPlayers)) {
+                       return newPlayers;
+                   }
+                   return prev;
+              });
               
               // Determine if host
               if (room.player1.id === clientId) setIsHost(true);
           }
       } catch (error) {
           console.error("Error fetching room state:", error);
+      } finally {
+          isFetchingRef.current = false;
       }
   }, [clientId]);
 
